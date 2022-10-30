@@ -28,95 +28,192 @@ let imgs = [
 
 // -----------------------------------------------------------
 
+let contall = document.querySelector('.cont-all')
 let next = document.querySelector('.next');
 let prev = document.querySelector('.prev');
 let pics = document.querySelector('.pics');
 let bigImgContainer = document.querySelector('.imgs');
+
+
+next.addEventListener('click', handleNextPrev)
+next.isNext = true
+prev.addEventListener('click', handleNextPrev)
+prev.isNext = false
+
 let counter = 0;
+let isOver = false;
+let isRightDirection = true;
 
-// --------------------------------------------
+// -----------------
 
-imgs.forEach((content) => {
 
-let fotos =`
+contall.addEventListener('mouseenter', () =>{
 
-   <div class="ogt ">
+isOver = true ;
 
-  <h3 class ="title">${content.titolo}</h3>
+})
+
+// --------
+
+
+contall.addEventListener('mouseleave', () =>{
+
+  isOver = false ;
   
-  <p class="desc">${content.desc}</p>
+  })
+  
 
-  <img class= "" src="${content.foto}" alt="">
-
-  </div>
-
-  `;
+// --------
 
 
-  bigImgContainer.innerHTML += fotos;
+bigImgContainer.addEventListener('dblclick',() => {
 
-  let smallPic =`
+  isRightDirection = !isRightDirection;
+  
+})
 
-  <img class= "smlPic" src="${content.foto}" alt="">
+document.addEventListener('keypress', (event) =>{
 
-  `;
+  if(event.code === 'Space'){
 
-  pics.innerHTML += smallPic;
+    isOver = !isOver;
+
+  }
 
 })
 
-let fotoG = document.getElementsByClassName('ogt');
-
-let fotoP = document.getElementsByClassName('smlPic');
-
-fotoG[counter].classList.add('visible');
-
-fotoP[counter].classList.add('active');
 
 // --------------------------------------------
 
 
-next.addEventListener('click', function(){
 
-  fotoG[counter].classList.remove('visible');
+init();
+function init(){
 
-   fotoP[counter].classList.remove('active');
+  pics.innerHTML = '';
+  bigImgContainer.innerHTML = '';
 
-  counter++;
+  imgs.forEach((image, index) => {
 
-  if(counter === imgs.length){
+   bigImgContainer.innerHTML += getTemplateImage(image);
 
-     counter = 0;
+   pics.innerHTML += getTemplatePic(image,index);
 
+  }) 
+
+  activeImage()
+
+}
+
+// ----------------------
+
+function handleNextPrev(){
+ 
+
+  deactiveImage()
+ 
+  nextPrev(this.isNext)
+  
+  activeImage()
+}
+
+// ----------------------
+
+function nextPrev(isNext){
+
+   if(isNext){
+    counter++;
+    if(counter === imgs.length){
+      counter = 0;
+    }
+  }else{
+    counter--
+    if(counter < 0){
+      counter = imgs.length -1;
+    }
+  
+  } 
+
+}
+
+
+// ----------------------
+
+
+function activeImage(){
+
+document.getElementsByClassName('ogt')[counter].classList.add('visible')
+document.getElementsByClassName('smlPic')[counter].classList.add('active')
+}
+
+function deactiveImage(){
+
+  document.getElementsByClassName('ogt')[counter].classList.remove('visible')
+  document.getElementsByClassName('smlPic')[counter].classList.remove('active')
   }
+  
 
 
-  fotoG[counter].classList.add('visible');
+// ----------------------
 
-  fotoP[counter].classList.add('active');
+  
+function getTemplateImage(image){
 
-});
+const{titolo, desc, foto} = image;
+   
 
-// --------------------------------------------
+return ` <div class="ogt ">
+
+<h3 class ="title">${titolo}</h3>
+
+<p class="desc">${desc}</p>
+
+<img class= "" src="${foto}" alt="">
+
+</div>
+`
+
+}
+
+// ----------------------
 
 
-prev.addEventListener('click', function(){
+function getTemplatePic(image , index){
 
-  fotoG[counter].classList.remove('visible');
+  const{titolo,foto} = image
 
-  fotoP[counter].classList.remove('active');
+return `  <img class= "smlPic" onclick='hendleThumb(${index})' src="${foto}" alt="${titolo}">`
+  
+}
 
-  counter--
+// ----------------------
 
-  if(counter < 0 ){
 
-    counter = imgs.length -1
+function hendleThumb(index){
 
+  deactiveImage();
+  counter = index;
+  activeImage();
+
+}
+
+// ----------------------
+
+
+setInterval(() =>{
+
+
+  if(!isOver){
+
+    deactiveImage() ;
+
+  nextPrev(isRightDirection)
+
+  activeImage();
   }
+  
+ 
 
-  fotoG[counter].classList.add('visible')
+},2000) 
 
-  fotoP[counter].classList.add('active')
-
-
-})
+// -----------------------

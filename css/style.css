@@ -43,6 +43,10 @@ body{
   padding: 5px;
 }
 
+.title,.desc{
+  text-shadow: 5px 6px 9px rgba(0, 0, 0, 0.8);
+}
+
 .imgs{
 height: 80%;
 width: 100%;
@@ -76,6 +80,10 @@ position: relative;
   display: flex;
 }
 
+.smlPic{
+opacity: 0.5;
+}
+
 .pics img{
   height: 100%;
   width: calc(100% / 5 );
@@ -83,6 +91,7 @@ position: relative;
 
 .active{
   border: 2px solid #fff;
+  opacity: 1;
 }
 
 
